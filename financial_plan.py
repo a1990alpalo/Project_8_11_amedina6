@@ -27,9 +27,40 @@ class FinancialPlan:
         """Return the total amount of all expenses."""
         return sum(expense.amount for expense in self.expenses)
     
+    def get_fixed_expenses(self):
+        """Return the total amount of fixed expenses."""
+        return sum(
+            expense.amount
+            for expense in self.expenses
+            if expense.expense_type == "fixed"
+        )
+    
+    def get_variable_expenses(self):
+        """Return the total amount of variable expenses."""
+        return sum(
+            expense.amount
+            for expense in self.expenses
+            if expense.expense_type == "variable"
+        )
+    
     def get_remaining_income(self):
         """Return the monthly income remaining after expenses."""
         return self.monthly_income - self.get_total_expenses()
+    
+    def to_dictionary(self): 
+        """Return the complete financial plan as a dictionary."""
+        return {
+            "monthly_income": self.monthly_income, 
+            "expenses": [
+                expense.to_dictionary()
+                for expense in self.expenses
+            ],
+            "savings_goals": [
+                savings_goal.to_dictionary()
+                for savings_goal in self.savings_goals
+            ]
+        }
+    
     
 if __name__ == "__main__": 
     financial_plan = FinancialPlan()
@@ -45,7 +76,13 @@ if __name__ == "__main__":
     emergency_fund = SavingsGoal("Emergency Fund", 5000.00)
     financial_plan.add_savings_goal(emergency_fund)
 
+
     print(f"Monthly income: ${financial_plan.monthly_income:.2f}")
     print(f"Total expenses: ${financial_plan.get_total_expenses():.2f}")
     print(f"Remaining income: ${financial_plan.get_remaining_income():.2f}")
     print(f"Savings goals: {len(financial_plan.savings_goals)}")
+    print(f"Fixed expenses: ${financial_plan.get_fixed_expenses():.2f}")
+    print(f"Variable expenses: " 
+          f"${financial_plan.get_variable_expenses():.2f}"
+    )
+    print(financial_plan.to_dictionary())
