@@ -1,3 +1,7 @@
+import json
+from pathlib import Path
+
+
 from expense import Expense
 from savings_goal import SavingsGoal
 
@@ -60,7 +64,17 @@ class FinancialPlan:
                 for savings_goal in self.savings_goals
             ]
         }
-    
+    def save_to_file(self, filename="financial_plan.json"):
+        """Save the financial plan to a JSON file."""
+
+        file_path = Path(filename)
+        plan_data = self.to_dictionary()
+
+        file_path.write_text(
+            json.dumps(plan_data, indent=4),
+            encoding = "utf-8",
+        )
+        
     
 if __name__ == "__main__": 
     financial_plan = FinancialPlan()
@@ -86,3 +100,5 @@ if __name__ == "__main__":
           f"${financial_plan.get_variable_expenses():.2f}"
     )
     print(financial_plan.to_dictionary())
+    financial_plan.save_to_file()
+    print("Financial plan saved successfully.")
