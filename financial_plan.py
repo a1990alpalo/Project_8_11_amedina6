@@ -74,7 +74,50 @@ class FinancialPlan:
             json.dumps(plan_data, indent=4),
             encoding = "utf-8",
         )
+    
+    def load_from_file(self, filename="financial_plan.json"):
+        """Load the financial plan from a JSON file."""
         
+        file_path = Path(filename)
+
+        try: 
+            file_contents = file_path.read_text(encoding="utf-8")
+        except FileNotFoundError: 
+            print(f"{filename} was not found.")
+            return False
+        
+        plan_data = json.loads(file_contents)
+
+        self.monthly_income = plan_data.get("monthly_income", 0.00)
+        self.expenses = []
+
+        for expense_data in plan_data.get("expenses", []):
+            expense = Expense(
+                expense_data["name"],
+                expense_data["amount"],
+                expense_data["expense_type"],
+
+            )
+            self.add_expense(expense)
+        
+        self.savings_goals = []
+
+        for goal_data in plan_data.get("savings_goals", []):
+            savings_goal = SavingsGoal(
+                goal_data["name"],
+                goal_data["target_amount"],
+            )
+
+            savings_goal.current_amount = goal_data.get(
+                "current_amount",
+                0.00,
+            )
+            
+            self.add_savings_goal(savings_goal)
+        
+        return True
+
+    
     
 if __name__ == "__main__": 
     financial_plan = FinancialPlan()
@@ -88,6 +131,7 @@ if __name__ == "__main__":
     financial_plan.add_expense(groceries)
 
     emergency_fund = SavingsGoal("Emergency Fund", 5000.00)
+    emergency_fund.add_contribution(750.00)
     financial_plan.add_savings_goal(emergency_fund)
 
 
@@ -102,3 +146,21 @@ if __name__ == "__main__":
     print(financial_plan.to_dictionary())
     financial_plan.save_to_file()
     print("Financial plan saved successfully.")
+
+    loaded_plan = FinancialPlan()
+    loaded_plan.load_from_file()
+
+    print(
+        f"Loaded monthly income: "
+        f"${loaded_plan.monthly_income:.2f}" 
+    )
+
+    print(
+        f"Loaded total expenses: "
+        f"${loaded_plan.get_total_expenses():.2f}"
+    )
+
+    print(
+        f"Loaded savings goals: "
+        f"{len(loaded_plan.savings_goals)}"
+    )
