@@ -88,7 +88,7 @@ class FinancialPlan:
         except FileNotFoundError: 
             print(f"{filename} was not found.")
             return False
-        except(OSError, json.JSONDecodeError) as error: 
+        except (OSError, json.JSONDecodeError) as error: 
             print(f"Unable to load the financial plan: {error}")
             return False
         

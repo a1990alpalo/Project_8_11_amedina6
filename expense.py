@@ -1,8 +1,9 @@
 """
 Program: Monthly Financial Goal Planner
-Author: Alberto Medina 
-Purpose: Define the expense class used to represent a monthly expense. 
+Author: Alberto Medina
+Purpose: Define the expense class used to represent a monthly expense.
 Date: July 15,2026"""
+
 
 class Expense:
     """Represent one fixed or variable monthly expense."""
@@ -16,8 +17,7 @@ class Expense:
     def get_summary(self):
         """Return a formatted summary of the expense."""
         return (
-            f"{self.name.title()}: ${self.amount:.2f} "
-            f"({self.expense_type.title()})"
+            f"{self.name.title()}: ${self.amount:.2f} " f"({self.expense_type.title()})"
         )
 
     def to_dictionary(self):
