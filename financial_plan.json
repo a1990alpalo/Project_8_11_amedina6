@@ -16,6 +16,7 @@
         {
             "name": "Emergency Fund",
             "target_amount": 5000.0,
+            "monthly_contribution": 0.0,
             "current_amount": 750.0
         }
     ]

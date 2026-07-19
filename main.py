@@ -27,6 +27,24 @@ def get_positive_float(prompt):
             
             print("Please enter an amount greater than zero.")
 
+def get_goal_number(goal_count):
+    """Prompt until the user selects a valid savings goal."""
+    while True:
+        try:
+            goal_number = int(
+                input("Select a savings goal number: ")
+            )
+        except ValueError:
+            print("Please enter a valid whole number.")
+        else: 
+            if 1 <= goal_number <= goal_count:
+                return goal_number
+            
+            print(
+                f"Please enter a number from 1 to {goal_count}. "
+            )
+
+
 def main():
     """Run the Monthly Financial Goal Planner."""
     financial_plan = FinancialPlan()
@@ -64,12 +82,21 @@ def main():
 
         
         elif choice == "3":
-            name = input("Enter the savings goal name: ").strip()
+            name = input(
+                "Enter the savings goal name: "
+            ).strip()
             target_amount = get_positive_float(
                 "Enter the target amount: $"
             )
+            monthly_contribution = get_positive_float(
+                "Enter the planned monthly contribution: $"
+            )
 
-            savings_goal = SavingsGoal(name, target_amount)
+            savings_goal = SavingsGoal(
+                name, 
+                target_amount,
+                monthly_contribution,
+            )
             financial_plan.add_savings_goal(savings_goal)
 
             print(
@@ -89,8 +116,8 @@ def main():
             ):
                 print(f"{number}. {goal.name}")
 
-            goal_number = int(
-                input("Select a savings goal number: ")
+            goal_number = get_goal_number(
+                len(financial_plan.savings_goals)
             )
             
             selected_goal = financial_plan.savings_goals[
@@ -134,11 +161,33 @@ def main():
                 print("No savings goals have been created")
             else:
                 for goal in financial_plan.savings_goals:
+                    estimated_months = (
+                        goal.get_estimated_months()
+                    )
+
                     print(f"- {goal.get_summary()}")
                     print(
-                    f" Remaining amount: "
-                    f"${goal.get_remaining_amount():.2f}"
-                )
+                        f"  Remaining amount: "
+                        f"${goal.get_remaining_amount():.2f}"
+                    )
+                    print(
+                        f"  Planned monthly contribution: "
+                        f"${goal.monthly_contribution:.2f}"
+                    )
+
+                    if estimated_months is None:
+                        print(
+                            "  Estimated completion: "
+                            "Not available"
+                        )
+                    elif estimated_months == 0:
+                        print("  Estimated completion: Goal reached")
+                    else:
+                        print(
+                            f"  Estimated completion: "
+                            f"{estimated_months} months"
+                        )
+                    
         
         elif choice == "6":
             try:

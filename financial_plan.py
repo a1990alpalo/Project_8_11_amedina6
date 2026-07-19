@@ -81,12 +81,17 @@ class FinancialPlan:
         file_path = Path(filename)
 
         try: 
-            file_contents = file_path.read_text(encoding="utf-8")
+            file_contents = file_path.read_text(
+                encoding="utf-8"
+            )
+            plan_data = json.loads(file_contents)
         except FileNotFoundError: 
             print(f"{filename} was not found.")
             return False
+        except(OSError, json.JSONDecodeError) as error: 
+            print(f"Unable to load the financial plan: {error}")
+            return False
         
-        plan_data = json.loads(file_contents)
 
         self.monthly_income = plan_data.get("monthly_income", 0.00)
         self.expenses = []
@@ -106,15 +111,17 @@ class FinancialPlan:
             savings_goal = SavingsGoal(
                 goal_data["name"],
                 goal_data["target_amount"],
-            )
+                goal_data.get("monthly_contribution", 0.00
+            ),
+        )
 
             savings_goal.current_amount = goal_data.get(
                 "current_amount",
                 0.00,
             )
-            
+
             self.add_savings_goal(savings_goal)
-        
+
         return True
 
     
@@ -130,7 +137,11 @@ if __name__ == "__main__":
     financial_plan.add_expense(rent)
     financial_plan.add_expense(groceries)
 
-    emergency_fund = SavingsGoal("Emergency Fund", 5000.00)
+    emergency_fund = SavingsGoal(
+        "Emergency Fund",
+        5000.00,
+        500.00,
+    )
     emergency_fund.add_contribution(750.00)
     financial_plan.add_savings_goal(emergency_fund)
 
