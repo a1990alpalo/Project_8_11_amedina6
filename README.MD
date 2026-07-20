@@ -1,6 +1,8 @@
-# Monthly Financial Goal Planner
+# Monthly Financial Goal Planner 
 
-YouTube Presentation Link: 
+## Video Presentation
+
+[Watch my Project 2 presentation on YouTube](https://www.youtube.com/watch?v=qSPlJXMKmus)
 
 ## Project Overview
 
